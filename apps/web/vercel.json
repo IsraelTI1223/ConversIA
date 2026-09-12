@@ -1,0 +1,6 @@
+{
+  "framework": "nextjs",
+  "installCommand": "cd ../.. && pnpm install --filter conversia-web...",
+  "buildCommand": "cd ../.. && pnpm --filter conversia-web build",
+  "outputDirectory": ".next"
+}
