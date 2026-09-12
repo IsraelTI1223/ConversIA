@@ -70,12 +70,6 @@ export default function TranslatePage() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
       <AppNav />
-      <div className="marquee-strip">
-        <span>
-          ENGLISH → ESPAÑOL &bull; TRANSLATE &bull; TIPS &bull; GRAMMAR CHECK &bull; ENGLISH → ESPAÑOL &bull; TRANSLATE &bull; TIPS &bull; GRAMMAR CHECK &bull;&nbsp;
-        </span>
-      </div>
-
       <div className="max-w-3xl mx-auto p-6">
         <h1 className="brutal-heading mb-2" style={{ fontSize: '2.5rem' }}>
           Traducir

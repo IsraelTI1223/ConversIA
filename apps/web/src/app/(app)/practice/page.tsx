@@ -7,11 +7,18 @@ import { MicButton } from '@/components/ui/MicButton';
 import { useAuthStore } from '@/stores/auth.store';
 import { api } from '@/lib/api';
 
+const SKILL_ICONS: Record<string, JSX.Element> = {
+  WRITING: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>,
+  SPEAKING: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="1" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="18" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>,
+  READING: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>,
+  LISTENING: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>,
+};
+
 const SKILLS = [
-  { id: 'WRITING', label: 'Writing', desc: 'Completa oraciones, ordena palabras, escribe párrafos', icon: '✏️', bg: 'var(--color-primary)' },
-  { id: 'SPEAKING', label: 'Speaking', desc: 'Pronunciación, describe imágenes, roleplay', icon: '🎤', bg: 'var(--color-turquesa)' },
-  { id: 'READING', label: 'Reading', desc: 'Lee pasajes y responde preguntas de comprensión', icon: '📖', bg: 'var(--color-secondary)' },
-  { id: 'LISTENING', label: 'Listening', desc: 'Escucha audio y responde preguntas', icon: '🎧', bg: 'var(--color-yellow)' },
+  { id: 'WRITING', label: 'Writing', desc: 'Completa oraciones, ordena palabras, escribe párrafos', bg: 'var(--color-primary)' },
+  { id: 'SPEAKING', label: 'Speaking', desc: 'Pronunciación, describe imágenes, roleplay', bg: 'var(--color-turquesa)' },
+  { id: 'READING', label: 'Reading', desc: 'Lee pasajes y responde preguntas de comprensión', bg: 'var(--color-secondary)' },
+  { id: 'LISTENING', label: 'Listening', desc: 'Escucha audio y responde preguntas', bg: 'var(--color-yellow)' },
 ];
 
 interface Exercise {
@@ -114,11 +121,6 @@ export default function PracticePage() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
       <AppNav />
-      <div className="marquee-strip">
-        <span>
-          WRITING &bull; SPEAKING &bull; READING &bull; LISTENING &bull; PRACTICE MAKES PERFECT &bull; LA PRÁCTICA HACE AL MAESTRO &bull; WRITING &bull; SPEAKING &bull; READING &bull; LISTENING &bull; PRACTICE MAKES PERFECT &bull; LA PRÁCTICA HACE AL MAESTRO &bull;&nbsp;
-        </span>
-      </div>
 
       <div className="max-w-3xl mx-auto p-6">
         {view === 'select' && (
@@ -167,7 +169,7 @@ export default function PracticePage() {
                     transition: 'all 0.1s',
                   }}
                 >
-                  <span className="text-4xl block mb-3">{skill.icon}</span>
+                  <span className="block mb-3" style={{ opacity: 0.85 }}>{SKILL_ICONS[skill.id]}</span>
                   <span className="brutal-heading block text-xl mb-2">
                     {skill.label}
                   </span>
@@ -202,7 +204,7 @@ export default function PracticePage() {
               marginBottom: '1rem',
               animation: 'typing-bounce 1.2s infinite',
             }}>
-              {SKILLS.find((s) => s.id === selected)?.icon}
+              {selected && SKILL_ICONS[selected]}
             </div>
             <p className="brutal-heading" style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>
               Generando ejercicio...

@@ -42,12 +42,6 @@ export default function RegisterPage() {
 
   return (
     <main className="min-h-screen flex flex-col">
-      <div className="marquee-strip">
-        <span>
-          CREATE ACCOUNT &bull; CREAR CUENTA &bull; JOIN NOW &bull; ÚNETE &bull; FREE &bull; GRATIS &bull; CREATE ACCOUNT &bull; CREAR CUENTA &bull; JOIN NOW &bull; ÚNETE &bull; FREE &bull; GRATIS &bull;&nbsp;
-        </span>
-      </div>
-
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-lg">
           <Link

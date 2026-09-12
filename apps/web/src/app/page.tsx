@@ -3,13 +3,6 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col" style={{ background: 'var(--color-bg)' }}>
-      {/* Marquee strip */}
-      <div className="marquee-strip">
-        <span>
-          ENGLISH &bull; ESPAÑOL &bull; AI-POWERED &bull; CEFR A1-C2 &bull; CHAT &bull; PRACTICE &bull; TRANSLATE &bull; VOCABULARY &bull; ENGLISH &bull; ESPAÑOL &bull; AI-POWERED &bull; CEFR A1-C2 &bull; CHAT &bull; PRACTICE &bull; TRANSLATE &bull; VOCABULARY &bull;&nbsp;
-        </span>
-      </div>
-
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="max-w-xl w-full">
           {/* Logo / Hero */}
@@ -116,12 +109,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Bottom strip */}
-      <div className="marquee-strip">
-        <span>
-          LEARN BY DOING &bull; APRENDE HACIENDO &bull; POWERED BY CLAUDE AI &bull; VOCABULARIO INTELIGENTE &bull; CORRECCIÓN EN TIEMPO REAL &bull; LEARN BY DOING &bull; APRENDE HACIENDO &bull; POWERED BY CLAUDE AI &bull; VOCABULARIO INTELIGENTE &bull; CORRECCIÓN EN TIEMPO REAL &bull;&nbsp;
-        </span>
-      </div>
     </main>
   );
 }

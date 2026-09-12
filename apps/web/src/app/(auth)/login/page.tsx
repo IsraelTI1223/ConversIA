@@ -25,12 +25,6 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen flex flex-col">
-      <div className="marquee-strip">
-        <span>
-          SIGN IN &bull; INICIAR SESIÓN &bull; WELCOME BACK &bull; BIENVENIDO &bull; SIGN IN &bull; INICIAR SESIÓN &bull; WELCOME BACK &bull; BIENVENIDO &bull;&nbsp;
-        </span>
-      </div>
-
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-md">
           <Link

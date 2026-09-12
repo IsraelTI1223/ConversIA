@@ -8,15 +8,26 @@ import { SpeakButton } from '@/components/ui/SpeakButton';
 import { MicButton } from '@/components/ui/MicButton';
 import { api } from '@/lib/api';
 
+const TOPIC_ICONS: Record<string, JSX.Element> = {
+  'daily-life': <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+  'travel': <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>,
+  'technology': <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>,
+  'food': <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>,
+  'work': <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>,
+  'health': <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>,
+  'entertainment': <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg>,
+  'environment': <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+};
+
 const TOPICS = [
-  { id: 'daily-life', label: 'Daily Life', emoji: '🏠' },
-  { id: 'travel', label: 'Travel', emoji: '✈️' },
-  { id: 'technology', label: 'Technology', emoji: '💻' },
-  { id: 'food', label: 'Food & Cooking', emoji: '🍳' },
-  { id: 'work', label: 'Work & Career', emoji: '💼' },
-  { id: 'health', label: 'Health', emoji: '🏥' },
-  { id: 'entertainment', label: 'Entertainment', emoji: '🎬' },
-  { id: 'environment', label: 'Environment', emoji: '🌍' },
+  { id: 'daily-life', label: 'Daily Life' },
+  { id: 'travel', label: 'Travel' },
+  { id: 'technology', label: 'Technology' },
+  { id: 'food', label: 'Food & Cooking' },
+  { id: 'work', label: 'Work & Career' },
+  { id: 'health', label: 'Health' },
+  { id: 'entertainment', label: 'Entertainment' },
+  { id: 'environment', label: 'Environment' },
 ];
 
 const CEFR = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
@@ -370,11 +381,6 @@ export default function ChatPage() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
       <AppNav />
-      <div className="marquee-strip">
-        <span>
-          PRACTICE ENGLISH &bull; PRACTICA INGLÉS &bull; AI CONVERSATION &bull; REAL-TIME CORRECTION &bull; PRACTICE ENGLISH &bull; PRACTICA INGLÉS &bull; AI CONVERSATION &bull; REAL-TIME CORRECTION &bull;&nbsp;
-        </span>
-      </div>
 
       <div className="max-w-2xl mx-auto p-6">
         <h1 className="brutal-heading mb-8" style={{ fontSize: '2.5rem' }}>
@@ -431,7 +437,7 @@ export default function ChatPage() {
                   transition: 'all 0.1s',
                 }}
               >
-                <span className="text-xl">{t.emoji}</span>
+                <span style={{ opacity: 0.7 }}>{TOPIC_ICONS[t.id]}</span>
                 {t.label}
               </button>
             ))}
@@ -466,7 +472,7 @@ export default function ChatPage() {
           className="brutal-btn brutal-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
           style={{ fontSize: '1.1rem', padding: '1.125rem' }}
         >
-          {creating ? 'Creando sesión...' : topic ? '💬 Comenzar Chat' : 'Selecciona un tema'}
+          {creating ? 'Creando sesión...' : topic ? 'Comenzar Chat' : 'Selecciona un tema'}
         </button>
       </div>
     </div>

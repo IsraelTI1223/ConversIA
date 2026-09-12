@@ -30,9 +30,32 @@ export class UsersService {
       where: { userId, status: 'COMPLETED' },
     });
 
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const todayExercises = await this.prisma.practiceExercise.aggregate({
+      _sum: { score: true },
+      where: {
+        session: { userId },
+        answeredAt: { gte: todayStart },
+      },
+    });
+
+    const todayTranslations = await this.prisma.translationLog.aggregate({
+      _sum: { score: true },
+      where: {
+        userId,
+        createdAt: { gte: todayStart },
+      },
+    });
+
+    const dailyPoints =
+      (todayExercises._sum.score ?? 0) + (todayTranslations._sum.score ?? 0);
+
     return {
       cefrLevel: profile.cefrLevel,
       totalPoints: profile.totalPoints,
+      dailyPoints,
       streakDays: profile.streakDays,
       vocabularyCount: vocabCount,
       completedSessions: sessionsCount,
