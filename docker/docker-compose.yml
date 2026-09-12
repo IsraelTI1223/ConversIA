@@ -1,0 +1,86 @@
+version: '3.9'
+
+services:
+  # ==========================================
+  # PostgreSQL Database
+  # ==========================================
+  conversia-db:
+    image: postgres:16-alpine
+    container_name: conversia-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: conversia
+      POSTGRES_PASSWORD: conversia_dev
+      POSTGRES_DB: conversia_db
+    ports:
+      - '5433:5432'
+    volumes:
+      - conversia_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U conversia -d conversia_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # Redis Cache
+  # ==========================================
+  conversia-redis:
+    image: redis:7-alpine
+    container_name: conversia-redis
+    restart: unless-stopped
+    ports:
+      - '6380:6379'
+    volumes:
+      - conversia_redis:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # NestJS API
+  # ==========================================
+  conversia-api:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    container_name: conversia-api
+    restart: unless-stopped
+    ports:
+      - '4000:4000'
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      DATABASE_URL: postgresql://conversia:conversia_dev@conversia-db:5432/conversia_db?schema=public
+      REDIS_HOST: conversia-redis
+      REDIS_PORT: 6379
+    env_file:
+      - ../apps/api/.env
+    depends_on:
+      conversia-db:
+        condition: service_healthy
+      conversia-redis:
+        condition: service_healthy
+
+  # ==========================================
+  # Next.js Web App
+  # ==========================================
+  conversia-web:
+    build:
+      context: ../apps/web
+      dockerfile: Dockerfile
+    container_name: conversia-web
+    restart: unless-stopped
+    ports:
+      - '3001:3000'
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+      NEXT_PUBLIC_WS_URL: ws://localhost:4000
+    depends_on:
+      - conversia-api
+
+volumes:
+  conversia_pgdata:
+  conversia_redis:

@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum CefrLevel {
+  A1
+  A2
+  B1
+  B2
+  C1
+  C2
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum SessionStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum SkillType {
+  WRITING
+  SPEAKING
+  READING
+  LISTENING
+}
+
+model User {
+  id            String          @id @default(uuid())
+  email         String          @unique
+  passwordHash  String          @map("password_hash")
+  firstName     String          @map("first_name")
+  lastName      String          @map("last_name")
+  isActive      Boolean         @default(true) @map("is_active")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+  profile       UserProfile?
+  refreshTokens RefreshToken[]
+  chatSessions  ChatSession[]
+  vocabulary    UserVocabulary[]
+  practiceSessions PracticeSession[]
+  translationLogs  TranslationLog[]
+
+  @@map("users")
+}
+
+model UserProfile {
+  id              String    @id @default(uuid())
+  userId          String    @unique @map("user_id")
+  cefrLevel       CefrLevel @default(A1) @map("cefr_level")
+  nativeLanguage  String    @default("es") @map("native_language")
+  totalPoints     Int       @default(0) @map("total_points")
+  streakDays      Int       @default(0) @map("streak_days")
+  lastActiveDate  DateTime? @map("last_active_date")
+  writingScore    Int       @default(0) @map("writing_score")
+  speakingScore   Int       @default(0) @map("speaking_score")
+  readingScore    Int       @default(0) @map("reading_score")
+  listeningScore  Int       @default(0) @map("listening_score")
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model ChatSession {
+  id             String           @id @default(uuid())
+  userId         String           @map("user_id")
+  cefrLevel      CefrLevel        @map("cefr_level")
+  topic          String
+  status         SessionStatus    @default(ACTIVE)
+  durationMinutes Int             @map("duration_minutes")
+  startedAt      DateTime         @default(now()) @map("started_at")
+  endedAt        DateTime?        @map("ended_at")
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages       ChatMessage[]
+  vocabulary     SessionVocabulary[]
+
+  @@index([userId, status])
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id          String      @id @default(uuid())
+  sessionId   String      @map("session_id")
+  role        MessageRole
+  contentEn   String      @map("content_en")
+  contentEs   String      @map("content_es")
+  correctionEn String?    @map("correction_en")
+  isCorrect   Boolean?    @map("is_correct")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  session     ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("chat_messages")
+}
+
+model SessionVocabulary {
+  id          String      @id @default(uuid())
+  sessionId   String      @map("session_id")
+  wordEn      String      @map("word_en")
+  wordEs      String      @map("word_es")
+  phonetic    String?
+  exampleEn   String?     @map("example_en")
+  exampleEs   String?     @map("example_es")
+  partOfSpeech String?    @map("part_of_speech")
+  session     ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("session_vocabulary")
+}
+
+model UserVocabulary {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  wordEn       String   @map("word_en")
+  wordEs       String   @map("word_es")
+  phonetic     String?
+  mastery      Int      @default(0)
+  timesCorrect Int      @default(0) @map("times_correct")
+  timesWrong   Int      @default(0) @map("times_wrong")
+  lastPracticed DateTime? @map("last_practiced")
+  createdAt    DateTime @default(now()) @map("created_at")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, wordEn])
+  @@index([userId, mastery])
+  @@map("user_vocabulary")
+}
+
+model PracticeSession {
+  id          String            @id @default(uuid())
+  userId      String            @map("user_id")
+  skillType   SkillType         @map("skill_type")
+  cefrLevel   CefrLevel         @map("cefr_level")
+  totalScore  Int               @default(0) @map("total_score")
+  completedAt DateTime?         @map("completed_at")
+  createdAt   DateTime          @default(now()) @map("created_at")
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises   PracticeExercise[]
+
+  @@index([userId, skillType])
+  @@map("practice_sessions")
+}
+
+model PracticeExercise {
+  id           String          @id @default(uuid())
+  sessionId    String          @map("session_id")
+  exerciseType String          @map("exercise_type")
+  prompt       String
+  userAnswer   String?         @map("user_answer")
+  correctAnswer String?        @map("correct_answer")
+  score        Int             @default(0)
+  feedbackEn   String?         @map("feedback_en")
+  feedbackEs   String?         @map("feedback_es")
+  answeredAt   DateTime?       @map("answered_at")
+  session      PracticeSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("practice_exercises")
+}
+
+model TranslationLog {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  sourceText    String   @map("source_text")
+  translatedText String  @map("translated_text")
+  score         Int      @default(0)
+  analysis      Json?
+  createdAt     DateTime @default(now()) @map("created_at")
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("translation_logs")
+}
