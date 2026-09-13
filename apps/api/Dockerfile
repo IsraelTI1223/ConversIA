@@ -10,25 +10,23 @@ RUN pnpm install --filter conversia-api... --frozen-lockfile
 
 FROM base AS build
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=deps /app ./
 COPY apps/api ./apps/api
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN cd apps/api && npx prisma generate && npx nest build
+RUN pnpm deploy --filter conversia-api --prod /app/deployed
 
 FROM node:20-alpine AS runner
 WORKDIR /app
 RUN apk add --no-cache dumb-init openssl
 
+COPY --from=build /app/deployed ./
 COPY --from=build /app/apps/api/dist ./dist
 COPY --from=build /app/apps/api/prisma ./prisma
-COPY --from=build /app/apps/api/node_modules ./node_modules
-COPY --from=build /app/node_modules/.pnpm ./node_modules/.pnpm
-COPY --from=build /app/apps/api/package.json ./
+COPY --from=build /app/apps/api/node_modules/.prisma ./node_modules/.prisma
 
 ENV NODE_ENV=production
 ENV PORT=4000
 EXPOSE 4000
 
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main"]
+CMD ["sh", "-c", "npx prisma migrate deploy --schema ./prisma/schema.prisma && node dist/main"]
