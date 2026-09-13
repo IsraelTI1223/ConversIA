@@ -41,12 +41,13 @@ function MessageBubble({ msg }: { msg: ChatMessage }) {
     <div style={{ display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start', marginBottom: '0.75rem' }}>
       <div
         style={{
-          maxWidth: '80%',
+          maxWidth: 'min(80%, 500px)',
           border: 'var(--border-brutal)',
           boxShadow: 'var(--shadow-brutal-sm)',
-          padding: '0.875rem 1rem',
+          padding: '0.75rem 0.875rem',
           background: isUser ? 'var(--color-primary)' : 'var(--color-surface)',
           color: isUser ? '#fff' : 'var(--color-text)',
+          wordBreak: 'break-word' as const,
         }}
       >
         <div style={{ fontSize: '0.6rem', fontFamily: 'var(--font-mono)', fontWeight: 700, marginBottom: '0.375rem', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -211,17 +212,17 @@ function ChatView({
       `}</style>
 
       <header
-        className="flex items-center justify-between px-6 py-3"
-        style={{ borderBottom: 'var(--border-brutal-thick)', background: 'var(--color-surface)' }}
+        className="flex items-center justify-between px-3 py-2 sm:px-6 sm:py-3"
+        style={{ borderBottom: 'var(--border-brutal-thick)', background: 'var(--color-surface)', gap: '0.5rem' }}
       >
-        <div className="flex items-center gap-3">
-          <span className="brutal-heading" style={{ fontSize: '1.25rem' }}>
+        <div className="flex items-center gap-2 flex-wrap" style={{ minWidth: 0 }}>
+          <span className="brutal-heading" style={{ fontSize: '1.1rem', whiteSpace: 'nowrap' }}>
             Convers<span style={{ color: 'var(--color-primary)' }}>IA</span>
           </span>
           <span className="brutal-badge" style={{ background: 'var(--color-turquesa)', color: '#1A1A2E' }}>
             {level}
           </span>
-          <span className="brutal-badge" style={{ background: 'var(--color-yellow)', color: '#1A1A2E' }}>
+          <span className="brutal-badge" style={{ background: 'var(--color-yellow)', color: '#1A1A2E', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px' }}>
             {topicLabel}
           </span>
           <span
@@ -231,6 +232,7 @@ function ChatView({
               borderRadius: '50%',
               background: isConnected ? 'var(--color-lime)' : 'var(--color-red)',
               display: 'inline-block',
+              flexShrink: 0,
             }}
           />
         </div>
@@ -238,13 +240,13 @@ function ChatView({
           type="button"
           onClick={onEnd}
           className="brutal-btn brutal-btn-secondary"
-          style={{ padding: '0.5rem 1rem', fontSize: '0.75rem' }}
+          style={{ padding: '0.4rem 0.75rem', fontSize: '0.7rem', whiteSpace: 'nowrap', flexShrink: 0 }}
         >
           Terminar
         </button>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-6" style={{ maxHeight: 'calc(100vh - 140px)' }}>
+      <div className="flex-1 overflow-y-auto" style={{ padding: 'clamp(0.75rem, 3vw, 1.5rem)', maxHeight: 'calc(100vh - 140px)' }}>
         {messages.length === 0 && !isTyping && (
           <div className="text-center py-12" style={{ color: 'var(--color-text-secondary)' }}>
             <span className="text-4xl block mb-3">👋</span>
@@ -323,6 +325,8 @@ function ChatView({
           <MicButton
             onTranscript={(text) => setInput(text)}
             lang={lang === 'en' ? 'en-US' : 'es-ES'}
+            timed
+            maxSeconds={120}
           />
           <button
             type="button"
@@ -382,11 +386,11 @@ export default function ChatPage() {
     <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
       <AppNav />
 
-      <div className="max-w-2xl mx-auto p-6">
-        <h1 className="brutal-heading mb-8" style={{ fontSize: '2.5rem' }}>
+      <div className="max-w-2xl mx-auto" style={{ padding: 'clamp(1rem, 3vw, 1.5rem)' }}>
+        <h1 className="brutal-heading mb-6" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)' }}>
           Nueva
           <br />
-          <span style={{ color: 'var(--color-primary)' }}>Conversación</span>
+          <span style={{ color: 'var(--color-primary)' }}>Conversacion</span>
         </h1>
 
         <div className="brutal-card p-6 mb-4">

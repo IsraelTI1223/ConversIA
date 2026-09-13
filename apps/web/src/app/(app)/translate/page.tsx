@@ -70,16 +70,16 @@ export default function TranslatePage() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
       <AppNav />
-      <div className="max-w-3xl mx-auto p-6">
-        <h1 className="brutal-heading mb-2" style={{ fontSize: '2.5rem' }}>
+      <div className="max-w-3xl mx-auto" style={{ padding: 'clamp(1rem, 3vw, 1.5rem)' }}>
+        <h1 className="brutal-heading mb-2" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)' }}>
           Traducir
         </h1>
-        <p className="mb-8" style={{
+        <p className="mb-6" style={{
           fontFamily: 'var(--font-heading)',
-          fontSize: '1rem',
+          fontSize: '0.875rem',
           color: 'var(--color-text-secondary)',
         }}>
-          Escribe o dicta en inglés y recibe traducción, análisis gramatical y tips de mejora.
+          Escribe o dicta en ingles y recibe traduccion, analisis gramatical y tips de mejora.
         </p>
 
         {error && (

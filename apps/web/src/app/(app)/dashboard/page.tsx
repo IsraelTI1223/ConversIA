@@ -87,12 +87,12 @@ export default function DashboardPage() {
     <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
       <AppNav />
 
-      <div className="max-w-5xl mx-auto p-6">
-        <div className="mb-8">
-          <h2 className="brutal-heading" style={{ fontSize: '2.5rem', marginBottom: '0.25rem' }}>
+      <div className="max-w-5xl mx-auto" style={{ padding: 'clamp(1rem, 3vw, 1.5rem)' }}>
+        <div className="mb-6">
+          <h2 className="brutal-heading" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', marginBottom: '0.25rem' }}>
             Dashboard
           </h2>
-          <p style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', color: 'var(--color-text-secondary)' }}>
+          <p style={{ fontFamily: 'var(--font-heading)', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
             Tu progreso de aprendizaje
           </p>
         </div>
@@ -149,7 +149,7 @@ export default function DashboardPage() {
                   >
                     {stat.label}
                   </span>
-                  <span className="brutal-heading block" style={{ fontSize: '2.5rem' }}>
+                  <span className="brutal-heading block" style={{ fontSize: 'clamp(1.75rem, 6vw, 2.5rem)' }}>
                     {stat.value}
                   </span>
                   {'sub' in stat && stat.sub && (

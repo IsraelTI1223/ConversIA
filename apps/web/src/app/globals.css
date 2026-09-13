@@ -187,25 +187,39 @@ body {
   border: none;
 }
 
-.marquee-strip {
-  overflow: hidden;
-  white-space: nowrap;
-  background: var(--color-border);
-  color: var(--color-bg);
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  padding: 0.375rem 0;
+/* AppNav responsive */
+[data-desktop-nav] { display: none !important; }
+[data-mobile-nav] { display: flex !important; }
+
+@media (min-width: 768px) {
+  [data-desktop-nav] { display: flex !important; }
+  [data-mobile-nav] { display: none !important; }
+  [data-mobile-dropdown] { display: none !important; }
 }
 
-.marquee-strip span {
-  display: inline-block;
-  animation: marquee 20s linear infinite;
-}
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .brutal-btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+  }
 
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  .brutal-card {
+    box-shadow: var(--shadow-brutal-sm);
+  }
+
+  .brutal-card:hover {
+    transform: none;
+    box-shadow: var(--shadow-brutal-sm);
+  }
+
+  .brutal-input {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.8rem;
+  }
+
+  .brutal-badge {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.65rem;
+  }
 }

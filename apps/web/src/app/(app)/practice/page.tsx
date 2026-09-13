@@ -122,17 +122,16 @@ export default function PracticePage() {
     <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
       <AppNav />
 
-      <div className="max-w-3xl mx-auto p-6">
+      <div className="max-w-3xl mx-auto" style={{ padding: 'clamp(1rem, 3vw, 1.5rem)' }}>
         {view === 'select' && (
           <>
-            <h1 className="brutal-heading mb-2" style={{ fontSize: '2.5rem' }}>
-              Práctica
+            <h1 className="brutal-heading mb-2" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)' }}>
+              Practica
             </h1>
-            <p className="mb-8" style={{
+            <p className="mb-6" style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: '1rem',
+              fontSize: '0.875rem',
               color: 'var(--color-text-secondary)',
-              maxWidth: '35ch',
             }}>
               Elige una habilidad para practicar con tu vocabulario capturado en las conversaciones.
             </p>
