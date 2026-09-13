@@ -18,11 +18,12 @@ RUN cd apps/api && npx prisma generate && npx nest build
 
 FROM node:20-alpine AS runner
 WORKDIR /app
-RUN apk add --no-cache dumb-init
+RUN apk add --no-cache dumb-init openssl
 
 COPY --from=build /app/apps/api/dist ./dist
 COPY --from=build /app/apps/api/prisma ./prisma
 COPY --from=build /app/apps/api/node_modules ./node_modules
+COPY --from=build /app/node_modules/.pnpm ./node_modules/.pnpm
 COPY --from=build /app/apps/api/package.json ./
 
 ENV NODE_ENV=production
