@@ -8,8 +8,10 @@ import { ChatModule } from './chat/chat.module';
 import { PracticeModule } from './practice/practice.module';
 import { TranslationModule } from './translation/translation.module';
 import { AiModule } from './ai/ai.module';
+import { AppController } from './app.controller';
 
 @Module({
+  controllers: [AppController],
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRoot([
