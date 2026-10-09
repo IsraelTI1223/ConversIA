@@ -49,29 +49,30 @@ export function VoiceMic({
 
     const recognition = new SpeechRecognition();
     recognition.lang = lang;
-    recognition.continuous = true;
+    recognition.continuous = false;
     recognition.interimResults = true;
-
-    let finalTranscript = '';
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       let interim = '';
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
         if (result.isFinal) {
-          finalTranscript += (finalTranscript ? ' ' : '') + result[0].transcript.trim();
+          const text = result[0].transcript.trim();
+          if (text) {
+            onInterimTranscript?.('');
+            onFinalTranscript(text);
+          }
         } else {
           interim += result[0].transcript;
         }
       }
-      onInterimTranscript?.(interim);
+      if (interim) {
+        onInterimTranscript?.(interim);
+      }
     };
 
     recognition.onend = () => {
       recognitionRef.current = null;
-      if (finalTranscript.trim()) {
-        onFinalTranscript(finalTranscript.trim());
-      }
       if (activeRef.current) {
         startRecognition();
       }

@@ -65,7 +65,7 @@ function SetupScreen({ onStart }: { onStart: (sessionId: string) => void }) {
           marginBottom: '0.5rem',
         }}
       >
-        Voice Conversation
+        Live Talk
       </h1>
       <p style={{
         textAlign: 'center',
@@ -74,7 +74,7 @@ function SetupScreen({ onStart }: { onStart: (sessionId: string) => void }) {
         fontSize: '0.8rem',
         marginBottom: '1.5rem',
       }}>
-        Practice speaking English with AI corrections in real time
+        Speak English live with AI — get corrections as you go
       </p>
 
       {/* Level */}
