@@ -1,5 +1,5 @@
 import { IsEnum, IsString, IsOptional, IsInt, Min, Max } from 'class-validator';
-import { CefrLevel } from '@prisma/client';
+import { CefrLevel, SessionMode } from '@prisma/client';
 
 export class CreateSessionDto {
   @IsEnum(CefrLevel)
@@ -9,8 +9,12 @@ export class CreateSessionDto {
   topic: string;
 
   @IsOptional()
+  @IsEnum(SessionMode)
+  mode?: SessionMode;
+
+  @IsOptional()
   @IsInt()
-  @Min(5)
+  @Min(1)
   @Max(60)
   durationMinutes?: number;
 }

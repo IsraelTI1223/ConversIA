@@ -10,6 +10,10 @@ import { AI_PROVIDER, AiProvider } from './providers';
 import { buildChatPrompt } from './prompts/chat.prompt';
 import { buildPracticePrompt } from './prompts/practice.prompt';
 import { buildTranslationPrompt } from './prompts/translation.prompt';
+import {
+  buildVoiceChatPrompt,
+  buildVoiceMetadataPrompt,
+} from './prompts/voice-chat.prompt';
 
 export interface ChatResponse {
   contentEn: string;
@@ -174,6 +178,67 @@ export class AiService {
     );
 
     return this.parseAiResponse(response, 'translateText');
+  }
+
+  async *processVoiceMessage(params: {
+    userMessage: string;
+    cefrLevel: string;
+    topic: string;
+    history: Array<{ role: string; contentEn: string; contentEs: string }>;
+  }): AsyncGenerator<string, void, unknown> {
+    const sanitized = this.sanitizeInput(
+      params.userMessage,
+      MAX_USER_MESSAGE_LENGTH,
+    );
+
+    const systemPrompt = buildVoiceChatPrompt(params.cefrLevel, params.topic);
+
+    const messages = params.history.map((msg) => ({
+      role: msg.role.toLowerCase() as 'user' | 'assistant',
+      content: msg.contentEn || msg.contentEs,
+    }));
+
+    messages.push({ role: 'user', content: sanitized });
+
+    yield* this.provider.chatStream(systemPrompt, messages, {
+      temperature: 0.8,
+      maxTokens: 256,
+    });
+  }
+
+  async extractVoiceMetadata(params: {
+    userMessage: string;
+    aiResponse: string;
+    cefrLevel: string;
+  }): Promise<{
+    isCorrect: boolean;
+    correctionEn: string | null;
+    vocabulary: Array<{
+      wordEn: string;
+      wordEs: string;
+      phonetic?: string;
+      exampleEn?: string;
+      exampleEs?: string;
+    }>;
+  }> {
+    const systemPrompt = buildVoiceMetadataPrompt();
+
+    const response = await this.callWithRetry(
+      () =>
+        this.provider.chat(
+          systemPrompt,
+          [
+            {
+              role: 'user',
+              content: `Student (${params.cefrLevel} level) said: "${params.userMessage}"\nTutor responded: "${params.aiResponse}"`,
+            },
+          ],
+          { temperature: 0.2, maxTokens: 512 },
+        ),
+      'extractVoiceMetadata',
+    );
+
+    return this.parseAiResponse(response, 'extractVoiceMetadata');
   }
 
   private sanitizeInput(input: string, maxLength: number): string {

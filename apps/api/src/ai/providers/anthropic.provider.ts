@@ -33,4 +33,27 @@ export class AnthropicProvider implements AiProvider {
     if (block.type === 'text') return block.text;
     throw new Error('Unexpected Anthropic response type');
   }
+
+  async *chatStream(
+    system: string,
+    messages: AiMessage[],
+    options: AiOptions,
+  ): AsyncGenerator<string, void, unknown> {
+    const stream = this.client.messages.stream({
+      model: this.model,
+      max_tokens: options.maxTokens,
+      temperature: options.temperature,
+      system,
+      messages,
+    });
+
+    for await (const event of stream) {
+      if (
+        event.type === 'content_block_delta' &&
+        event.delta.type === 'text_delta'
+      ) {
+        yield event.delta.text;
+      }
+    }
+  }
 }

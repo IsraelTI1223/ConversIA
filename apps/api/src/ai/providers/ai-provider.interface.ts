@@ -14,6 +14,12 @@ export interface AiProvider {
     messages: AiMessage[],
     options: AiOptions,
   ): Promise<string>;
+
+  chatStream(
+    system: string,
+    messages: AiMessage[],
+    options: AiOptions,
+  ): AsyncGenerator<string, void, unknown>;
 }
 
 export const AI_PROVIDER = Symbol('AI_PROVIDER');

@@ -8,6 +8,7 @@ import { useAuthStore } from '@/stores/auth.store';
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/chat', label: 'Chat' },
+  { href: '/voice', label: 'Voice' },
   { href: '/practice', label: 'Practice' },
   { href: '/translate', label: 'Translate' },
 ];

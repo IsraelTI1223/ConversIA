@@ -47,4 +47,33 @@ export class GeminiProvider implements AiProvider {
     if (!text) throw new Error('Empty Gemini response');
     return text;
   }
+
+  async *chatStream(
+    system: string,
+    messages: AiMessage[],
+    options: AiOptions,
+  ): AsyncGenerator<string, void, unknown> {
+    const model = this.client.getGenerativeModel({
+      model: this.model,
+      systemInstruction: system,
+      generationConfig: {
+        temperature: options.temperature,
+        maxOutputTokens: options.maxTokens,
+      },
+    });
+
+    const history = messages.slice(0, -1).map((msg) => ({
+      role: msg.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: msg.content }],
+    }));
+
+    const lastMessage = messages[messages.length - 1];
+    const chat = model.startChat({ history });
+    const result = await chat.sendMessageStream(lastMessage.content);
+
+    for await (const chunk of result.stream) {
+      const text = chunk.text();
+      if (text) yield text;
+    }
+  }
 }

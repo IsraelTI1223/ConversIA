@@ -7,12 +7,18 @@ export class ChatService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createSession(userId: string, dto: CreateSessionDto) {
+    const isVoice = dto.mode === 'VOICE';
+    const maxDuration = isVoice ? 30 : 60;
+    const defaultDuration = isVoice ? 10 : 15;
+    const duration = Math.min(dto.durationMinutes ?? defaultDuration, maxDuration);
+
     return this.prisma.chatSession.create({
       data: {
         userId,
         cefrLevel: dto.cefrLevel,
         topic: dto.topic,
-        durationMinutes: dto.durationMinutes ?? 15,
+        mode: dto.mode ?? 'TEXT',
+        durationMinutes: duration,
       },
     });
   }

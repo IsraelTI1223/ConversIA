@@ -30,6 +30,11 @@ enum SessionStatus {
   CANCELLED
 }
 
+enum SessionMode {
+  TEXT
+  VOICE
+}
+
 enum SkillType {
   WRITING
   SPEAKING
@@ -90,6 +95,7 @@ model ChatSession {
   userId         String           @map("user_id")
   cefrLevel      CefrLevel        @map("cefr_level")
   topic          String
+  mode           SessionMode      @default(TEXT)
   status         SessionStatus    @default(ACTIVE)
   durationMinutes Int             @map("duration_minutes")
   startedAt      DateTime         @default(now()) @map("started_at")
